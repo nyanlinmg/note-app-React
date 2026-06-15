@@ -10,7 +10,7 @@ import {
     ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon
 } from "@mui/icons-material";
-import { getTags} from "../../hooks/useTags/getTags";
+import { getTags} from "../../hooks/useTags/tagshook";
 import { useState } from "react";
 
 export default function Header() {

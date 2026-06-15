@@ -13,7 +13,7 @@ import {
 
 } from "@mui/icons-material"
 import { useState } from "react";
-import { getTags} from "../../hooks/useTags/getTags";
+import { getTags} from "../../hooks/useTags/tagshook";
 import { useQuery } from "@tanstack/react-query";
 export default function AppDrawer() {
     const {mode, setMode, drawer, setDrawer} = useApp();
