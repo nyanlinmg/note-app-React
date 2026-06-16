@@ -2,8 +2,18 @@ import express from "express"
 import { prisma } from "../lib/prisma"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
+import { auth } from "../middleware/auth";
 
 export const router = express.Router();
+
+router.get('/users/verify', auth, async(req, res) => {
+    const {id} = res.locals.user;
+    const user = await prisma.user.findUnique({
+        where: {id}
+    });
+
+    return res.json(user);
+})
 
 router.get('/users', async (req, res) => {
     try{
@@ -18,10 +28,9 @@ router.get('/users', async (req, res) => {
         return res.status(500).json({msg: "something went wrong"});
     }
 
-
 })
 
-router.post("/user/login", async(req, res) => {
+router.post("/users/login", async(req, res) => {
     try{
 
         const email = req.body?.email;

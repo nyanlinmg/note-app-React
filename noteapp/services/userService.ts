@@ -6,14 +6,14 @@ export interface LoginCredentials {
     password: string
 }
 
-export const loginUserApi = async (credentials: LoginCredentials): Promise<{user: TypeOfUser; token: string}> => {
-    const res = await fetch(`${api}/user/login`, {
+export const loginUserApi = async ({email, password} : LoginCredentials): Promise<{user: TypeOfUser; token: string}> => {
+    const res = await fetch(`${api}/users/login`, {
         method: 'POST',
         headers:{
             'Content-Type': "application/json"
         },
         body: JSON.stringify({
-            credentials
+            email, password
         })
     })
 
