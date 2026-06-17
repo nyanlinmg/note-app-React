@@ -30,6 +30,49 @@ router.get('/users', async (req, res) => {
 
 })
 
+router.post('/users/register', async(req, res) => {
+    try{
+        const {name, email, password, phone, image} = req.body;
+
+        const checkUser = await prisma.user.findUnique({
+            where: {email}
+        });
+
+        if(!name || !email || !password) {
+            return res.status(400).json("Fill the required input");
+        }
+
+        if(password.length < 8) {
+            return res.status(400).json("Password must be at least 8 characters");
+        }
+
+        if(checkUser){
+            return res.status(400).json("Email is already in use");
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const data = await prisma.user.create({
+            data: {
+                name,
+                email,
+                password: hashedPassword,
+                phone: phone || null,
+                image: image || null
+            }
+        })
+
+        return res.status(201).json(
+            {
+                success: "User registered successfully", data
+            }
+        )
+
+    }catch(error){
+        return res.status(500).json("something went wrong (internal server error)");
+    }
+})
+
 router.post("/users/login", async(req, res) => {
     try{
 

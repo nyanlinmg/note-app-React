@@ -9,14 +9,15 @@ import {
     Favorite as FavoriteIcon,
     Delete as TrashIcon,
     ExpandLess as ExpandLessIcon,
-    ExpandMore as ExpandMoreIcon
+    ExpandMore as ExpandMoreIcon,
+    Logout as LogoutIcon
 
 } from "@mui/icons-material"
 import { useState } from "react";
 import { getTags} from "../../hooks/useTags/tagshook";
 import { useQuery } from "@tanstack/react-query";
 export default function AppDrawer() {
-    const {mode, setMode, drawer, setDrawer} = useApp();
+    const {mode, setMode, drawer, setDrawer, auth} = useApp();
     const [dropDownOpen, setDropdownOpen] = useState(false);
     const {tags, isLoading, error, fetchTags} = getTags();
 
@@ -112,50 +113,55 @@ export default function AppDrawer() {
                         </ListItemButton>
                     </ListItem>
                     
-                    <ListItem disablePadding>
-                        <ListItemButton sx={hoverStyle}>
-                            <AccountIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
-                            <ListItemText primary="Profile"></ListItemText>
-                        </ListItemButton>
-                    </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton sx={hoverStyle}>
+                                    <AccountIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
+                                    <ListItemText primary="Profile"></ListItemText>
+                                </ListItemButton>
+                            </ListItem>
 
-                    <Divider />
+                            <Divider />
 
-                    <ListItem disablePadding>
-                        <ListItemButton sx={hoverStyle} onClick={handleDropdown}>
-                            <TagIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1, mr: 1}} />
-                            <ListItemText primary="tags"></ListItemText>
-                            {dropDownOpen ? <ExpandLessIcon /> : <ExpandMoreIcon /> }
-                        </ListItemButton>
-                    </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton sx={hoverStyle} onClick={handleDropdown}>
+                                    <TagIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1, mr: 1}} />
+                                    <ListItemText primary="tags"></ListItemText>
+                                    {dropDownOpen ? <ExpandLessIcon /> : <ExpandMoreIcon /> }
+                                </ListItemButton>
+                            </ListItem>
 
-                    <Collapse in={dropDownOpen} timeout="auto" unmountOnExit>
-                        <List disablePadding>
-                            {tags?.map(tag => (
-                                <ListItem disablePadding sx={tagHover}>
-                                    <ListItemButton>
-                                        {tag.name}
-                                    </ListItemButton>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Collapse>
+                            <Collapse in={dropDownOpen} timeout="auto" unmountOnExit>
+                                <List disablePadding>
+                                    {tags?.map(tag => (
+                                        <ListItem disablePadding sx={tagHover}>
+                                            <ListItemButton>
+                                                {tag.name}
+                                            </ListItemButton>
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Collapse>
 
-                    <ListItem disablePadding>
-                        <ListItemButton sx={hoverStyle}>
-                            <FavoriteIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
-                            <ListItemText primary="Favorite"></ListItemText>
-                        </ListItemButton>
-                    </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton sx={hoverStyle}>
+                                    <FavoriteIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
+                                    <ListItemText primary="Favorite"></ListItemText>
+                                </ListItemButton>
+                            </ListItem>
 
-                    <Divider />
+                            <Divider />
 
-                    <ListItem disablePadding>
-                        <ListItemButton sx={hoverStyle}>
-                            <TrashIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
-                            <ListItemText primary="Trash"></ListItemText>
-                        </ListItemButton>
-                    </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton sx={hoverStyle}>
+                                    <TrashIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
+                                    <ListItemText primary="Trash"></ListItemText>
+                                </ListItemButton>
+                            </ListItem>
+
+                            <button className={`ms-4 w-43 mt-3 flex justify-center gap-2 text-center border px-3 py-1 ${mode === "dark" ? "text-red-500 border-2 border-red-500 rounded-lg hover:bg-red-600 hover:text-white bg-transparent transition duration-300 cursor-pointer" : "text-red-600 hover:bg-red-600 hover:text-white bg-transparent border-2 rounded-lg transition duration-300 cursor-pointer border-red-600"}`}>
+                                <p>Logout</p>
+                                <LogoutIcon sx={{ms: 2}} />
+                            </button>
                 </List>
             </Container>
         </Drawer>

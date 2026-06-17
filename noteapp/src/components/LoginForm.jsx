@@ -53,6 +53,7 @@ export default function LoginForm() {
                         fullWidth
                         id="outlined-basic"
                         label="Email"
+                        required
                         variant="outlined"
                         placeholder="enter your email"
                         sx={{mb: 3}}
@@ -63,6 +64,7 @@ export default function LoginForm() {
                     <FormControl fullWidth variant="outlined">
                             <InputLabel htmlFor={`${outlinedPasswordId}-input`}>Password</InputLabel>
                             <OutlinedInput
+                                required
                                 id={`${outlinedPasswordId}-input`}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="enter your password"

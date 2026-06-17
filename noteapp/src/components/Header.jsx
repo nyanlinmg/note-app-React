@@ -1,4 +1,4 @@
-import { AppBar, Container, Icon, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Box, Menu, MenuItem } from "@mui/material";
+import { AppBar, Container, Icon, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Box, Menu, MenuItem, Button } from "@mui/material";
 import { useApp } from "../AppProvider";
 import { useLocation, useNavigate } from "react-router";
 
@@ -8,7 +8,8 @@ import {
     LightMode as LightModeIcon,
     DarkMode as DarkModeIcon,
     ExpandLess as ExpandLessIcon,
-    ExpandMore as ExpandMoreIcon
+    ExpandMore as ExpandMoreIcon,
+    Logout as LogoutIcon
 } from "@mui/icons-material";
 import { getTags} from "../../hooks/useTags/tagshook";
 import { useState } from "react";
@@ -20,6 +21,11 @@ export default function Header() {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const navigate = useNavigate();
+
+    const handleLogout = () => {
+        setAuth(undefined);
+        localStorage.removeItem('token');
+    }
 
     return (
         <AppBar position="static" color="primary">
@@ -81,12 +87,24 @@ export default function Header() {
                             </IconButton>
                         } 
 
-                        <IconButton 
-                            color="inherit" sx={{display: {xs: 'flex',md: 'none', alignItems: 'center', marginLeft: 4 }}}
-                            onClick={() => setDrawer(true)}
-                        >
-                            <MenuIcon />
-                        </IconButton>
+                        {auth &&
+                            <>
+                                <IconButton 
+                                    color="inherit" sx={{display: {xs: 'flex',md: 'none', alignItems: 'center', ml: 4 }}}
+                                    onClick={() => setDrawer(true)}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+
+                                <button 
+                                    className={`ms-4 flex justify-center gap-1 border px-3 py-1 ${mode === "dark" ? "text-red-500 border-2 border-red-500 rounded-lg hover:bg-red-600 hover:text-white bg-transparent transition duration-300 cursor-pointer" : "text-red-600 hover:bg-red-600 hover:text-white bg-transparent border-2 rounded-lg transition duration-300 cursor-pointer border-red-600"}`}
+                                    onClick={handleLogout}    
+                                >
+                                    <p>Logout</p>
+                                    <LogoutIcon />
+                                </button>
+                            </>
+                        }
                     </Box>
             </Toolbar>
         </AppBar>

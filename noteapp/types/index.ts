@@ -11,6 +11,7 @@ export type TypeOfUser = {
     email: string,
     password: string,
     phone?: string,
+    image?: string
 }
 
 export type TypeOfNote = {

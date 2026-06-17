@@ -1,8 +1,27 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router"
-import { LoginCredentials, loginUserApi } from "../../services/userService";
+import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi } from "../../services/userService";
 import { useApp } from "../../src/AppProvider";
 
+export const useRegisterUser = () => {
+    const navigate  = useNavigate();
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: ({name, email, password, phone, image}: RegisterCredentials) => registerUserApi({name, email, password, phone, image}),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["tags"]});
+            setTimeout(() => {
+                navigate('/')
+            }, 1000);
+        },
+        onError: (error: Error) => {
+            console.log(error.message);
+        }
+    });
+
+    return mutation;
+}
 
 export const useLoginUser =  () => {
     const navigate  = useNavigate();
