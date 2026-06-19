@@ -6,6 +6,19 @@ export interface LoginCredentials {
     password: string
 }
 
+export const totalTasksUserApi = async (id: string): Promise<TypeOfUser[]> => {
+    const res = await fetch(`${api}/users/${id}`, {
+        method: 'GET',
+    });
+
+    if(!res.ok) {
+        const error = await res.json();
+        throw new Error(error);
+    }
+
+    return res.json();
+}
+
 export const loginUserApi = async ({email, password} : LoginCredentials): Promise<{user: TypeOfUser; token: string}> => {
     const res = await fetch(`${api}/users/login`, {
         method: 'POST',
@@ -19,7 +32,7 @@ export const loginUserApi = async ({email, password} : LoginCredentials): Promis
 
     if(!res.ok){
         const error = await res.json();
-        throw new Error(error.msg);
+        throw new Error(error);
     }
 
     return res.json();

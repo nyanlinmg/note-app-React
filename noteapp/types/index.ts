@@ -10,6 +10,7 @@ export type TypeOfUser = {
     name: string,
     email: string,
     password: string,
+    notes: TypeOfNote[]
     phone?: string,
     image?: string
 }

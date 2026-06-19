@@ -25,6 +25,7 @@ export default function Header() {
     const handleLogout = () => {
         setAuth(undefined);
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
     }
 
     return (
@@ -97,7 +98,7 @@ export default function Header() {
                                 </IconButton>
 
                                 <button 
-                                    className={`ms-4 flex justify-center gap-1 border px-3 py-1 ${mode === "dark" ? "text-red-500 border-2 border-red-500 rounded-lg hover:bg-red-600 hover:text-white bg-transparent transition duration-300 cursor-pointer" : "text-red-600 hover:bg-red-600 hover:text-white bg-transparent border-2 rounded-lg transition duration-300 cursor-pointer border-red-600"}`}
+                                    className={`ms-4 flex justify-center gap-1 border p-1 ${mode === "dark" ? "text-red-500 border-2 border-red-500 rounded-lg hover:bg-red-600 hover:text-white bg-transparent transition duration-300 cursor-pointer" : "text-red-600 hover:bg-red-600 hover:text-white bg-transparent border-2 rounded-lg transition duration-300 cursor-pointer border-red-600"}`}
                                     onClick={handleLogout}    
                                 >
                                     <p>Logout</p>

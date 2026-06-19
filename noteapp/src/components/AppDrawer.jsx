@@ -17,7 +17,7 @@ import { useState } from "react";
 import { getTags} from "../../hooks/useTags/tagshook";
 import { useQuery } from "@tanstack/react-query";
 export default function AppDrawer() {
-    const {mode, setMode, drawer, setDrawer, auth} = useApp();
+    const {mode, setMode, drawer, setDrawer, auth, setAuth} = useApp();
     const [dropDownOpen, setDropdownOpen] = useState(false);
     const {tags, isLoading, error, fetchTags} = getTags();
 
@@ -81,6 +81,14 @@ export default function AppDrawer() {
             color: 'white',
         }
     };
+
+    const handleLogout = () => {
+        setAuth(undefined);
+        setDrawer(false);
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+    }
+
 
     return (
         <Drawer
@@ -158,7 +166,7 @@ export default function AppDrawer() {
                                 </ListItemButton>
                             </ListItem>
 
-                            <button className={`ms-4 w-43 mt-3 flex justify-center gap-2 text-center border px-3 py-1 ${mode === "dark" ? "text-red-500 border-2 border-red-500 rounded-lg hover:bg-red-600 hover:text-white bg-transparent transition duration-300 cursor-pointer" : "text-red-600 hover:bg-red-600 hover:text-white bg-transparent border-2 rounded-lg transition duration-300 cursor-pointer border-red-600"}`}>
+                            <button onClick={handleLogout} className={`ms-4 w-43 mt-3 flex justify-center gap-2 text-center border px-3 py-1 ${mode === "dark" ? "text-red-500 border-2 border-red-500 rounded-lg hover:bg-red-600 hover:text-white bg-transparent transition duration-300 cursor-pointer" : "text-red-600 hover:bg-red-600 hover:text-white bg-transparent border-2 rounded-lg transition duration-300 cursor-pointer border-red-600"}`}>
                                 <p>Logout</p>
                                 <LogoutIcon sx={{ms: 2}} />
                             </button>

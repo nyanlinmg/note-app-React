@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { auth } from "../middleware/auth";
+import { tr } from "@faker-js/faker";
 
 export const router = express.Router();
 
@@ -13,6 +14,39 @@ router.get('/users/verify', auth, async(req, res) => {
     });
 
     return res.json(user);
+})
+
+
+router.get('/users/favorites/:id', async (req, res) => {
+    try{
+        const userId = parseInt(req.params.id);
+
+        const totalFavorites = await prisma.note.findMany({
+            where: {
+                userId,
+                favorite: true
+            },
+        })
+
+        return res.status(200).json(totalFavorites);
+
+    }catch(error){
+        return res.status(500).json("something went wrong");
+    }
+})
+
+router.get('/users/:id',async (req, res)  => {
+    try{
+        const id = parseInt(req.params.id);
+
+        const totalTasks = await prisma.user.findUnique({
+            where: {id}
+        })
+
+        return res.status(200).json(totalTasks);
+    }catch(error){
+        return res.status(500).json("something went wrong");
+    }
 })
 
 router.get('/users', async (req, res) => {
@@ -95,6 +129,8 @@ router.post("/users/login", async(req, res) => {
                 )
 
                 return res.status(200).json({user,token})
+            }else {
+                return res.status(404).json("Password is wrong");
             }
         }else {
             return res.status(404).json("user not found");

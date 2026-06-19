@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router"
-import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi } from "../../services/userService";
+import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalTasksUserApi } from "../../services/userService";
 import { useApp } from "../../src/AppProvider";
 
 export const useRegisterUser = () => {
@@ -23,6 +23,20 @@ export const useRegisterUser = () => {
     return mutation;
 }
 
+export const useTotalTasksOfUser = (id: string) => {
+     const {
+        data: userTasks,
+        isFetching: isLoading,
+        error,
+        refetch
+     } = useQuery({
+        queryKey: ['users', id],
+        queryFn: () => totalTasksUserApi(id)
+     })
+
+     return {userTasks, isLoading, error, refetch}
+}
+
 export const useLoginUser =  () => {
     const navigate  = useNavigate();
     const queryClient = useQueryClient();
@@ -32,6 +46,7 @@ export const useLoginUser =  () => {
         mutationFn: ({email, password}: LoginCredentials) => loginUserApi({email, password}),
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.user.id.toString());
             setAuth(data.user);
             queryClient.invalidateQueries({queryKey: ["tags"]});
             setTimeout(() => {
