@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TypeOfTags } from "../../types";
-import { api } from "../../services/api";
+import { api } from "../../services/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTagsApi } from "../../services/tagsService";
 

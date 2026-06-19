@@ -8,7 +8,7 @@ import {
     Favorite as FavoriteIcon,
     AutoDelete as TrashBinIcon
 } from "@mui/icons-material";
-import { useTotalTasksOfUser } from "../../hooks/useUser/userhook";
+import { useTotalFavoritesOfUser, useTotalTasksOfUser } from "../../hooks/useUser/userhook";
 
 const cardVariants = {
   hidden: { opacity: 0,y: 20 },
@@ -38,7 +38,10 @@ const containerVariants = {
 export default function Count() {
     const {mode, setMode} = useApp();
     const id = localStorage.getItem('userId');
-    const {userTasks, isLoading, error, refetch} = useTotalTasksOfUser(id)
+    const {userTasks, isLoadingTasks, tasksError, refetchTasks} = useTotalTasksOfUser();
+    const {userFavorites, isLoadingFavorites, favoritesError, refetchFavorites} = useTotalFavoritesOfUser();
+    console.log(userTasks);
+    console.log(userFavorites);
 
     return (
         <MotionContainer
@@ -47,18 +50,20 @@ export default function Count() {
             whileInView={"visible"}
             viewport={{amount: 0.8}}
             component="div"
-            className="py-1 border grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between gap-x-5 gap-y-5">
+            className="py-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between gap-x-5 gap-y-5">
                 <MotionBox variants={cardVariants} component="div" className={`border-3 ${mode === "dark" ? "border-mauve-600 bg-mauve-900 text-blue-200" : "border-blue-400 bg-blue-50 text-blue-600"} rounded-md w-full p-2`}>
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <NotesIcon sx={{fontSize: 30}} />
-                        <h1>Total Tasks</h1>
+                        <h1>Total Tasks :</h1>
+                        {isLoadingTasks ? <p className="text-sm">Loading...</p>: <h1 className="font-bold ms-1 text-2xl">{userTasks?.notes.length}</h1>}
                     </div>
                 </MotionBox>
 
                 <MotionBox variants={cardVariants} component="div" className={`border-3 ${mode === "dark" ? "border-mauve-600 bg-mauve-900 text-amber-100" : "border-amber-300 bg-amber-50 text-amber-500"} rounded-md w-full p-2`}>
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <FavoriteIcon sx={{fontSize: 30}} />
-                        <h1>Total Favorites</h1>
+                        <h1>Total Favorites : </h1>
+                        {isLoadingFavorites ? <p className="text-sm">Loading...</p>: <h1 className="font-bold ms-1 text-2xl">{userFavorites?.length}</h1>}
                     </div>
                 </MotionBox>
 

@@ -2,9 +2,11 @@ import { Navigate } from "react-router";
 import { useApp } from "../AppProvider";
 
 export default function ProtectedRoute({children}){
-    const {auth} = useApp();
+    const {auth, authLoading} = useApp();
 
-    if(!auth){
+    if (authLoading) return null;
+
+    if (!auth) {
         return <Navigate to="/login" replace />
     }
 

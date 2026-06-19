@@ -1,4 +1,4 @@
-import { api } from './api'
+import { api } from './apiClient'
 import { TypeOfTags } from '../types'
 
 export const fetchTagsApi = async (): Promise<TypeOfTags[]> => {

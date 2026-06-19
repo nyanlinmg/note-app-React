@@ -4,7 +4,7 @@ import { createContext, useState,  useMemo, useContext, useEffect } from "react"
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppRouter from "./AppRouter";
-import { api } from "../services/api";
+import { apiClient } from "../services/apiClient";
 
 const queryClient = new QueryClient();
 const AppContext = createContext();
@@ -23,36 +23,25 @@ export default function AppProvider(){
 
     useEffect(() => {
         async function verifyUser() {
-            try {
             const token = localStorage.getItem("token");
-
-            console.log("Token:", token);
 
             if (!token) {
                 setAuthLoading(false);
                 return;
             }
 
-            const res = await fetch(`${api}/users/verify`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            try {
+                const user = await apiClient('/users/verify', {
+                    method: 'GET',
+                });
 
-            console.log("Verify status:", res.status);
-
-            if (res.ok) {
-                const user = await res.json();
-
-                console.log("Verified user:", user);
-
-                setAuth(user);
-            } else {
-                localStorage.removeItem("token");
-            }
+                if (user) {
+                    setAuth(user);
+                } else {
+                    localStorage.removeItem("token");
+                }
             } catch (error) {
-                console.error(error);
+                localStorage.removeItem("token");
             } finally {
                 setAuthLoading(false);
             }

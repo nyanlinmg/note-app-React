@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router"
-import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalTasksUserApi } from "../../services/userService";
+import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalFavoriteUserApi, totalTasksUserApi } from "../../services/userService";
 import { useApp } from "../../src/AppProvider";
 
 export const useRegisterUser = () => {
@@ -23,32 +23,47 @@ export const useRegisterUser = () => {
     return mutation;
 }
 
-export const useTotalTasksOfUser = (id: string) => {
+export const useTotalTasksOfUser = () => {
      const {
         data: userTasks,
-        isFetching: isLoading,
-        error,
-        refetch
+        isFetching: isLoadingTasks,
+        error: tasksError,
+        refetch: refetchTasks
      } = useQuery({
-        queryKey: ['users', id],
-        queryFn: () => totalTasksUserApi(id)
+        queryKey: ['userTasks', 'me'],
+        queryFn: () => totalTasksUserApi()
      })
 
-     return {userTasks, isLoading, error, refetch}
+     return {userTasks, isLoadingTasks, tasksError, refetchTasks}
+}
+
+export const useTotalFavoritesOfUser = () => {
+    const {
+        data: userFavorites,
+        isFetching: isLoadingFavorites,
+        error: favoritesError,
+        refetch: refetchFavorites
+    } = useQuery({
+        queryKey: ['userFavorites', 'me'],
+        queryFn: () => totalFavoriteUserApi()
+    })
+
+    return {userFavorites, isLoadingFavorites, favoritesError, refetchFavorites}
 }
 
 export const useLoginUser =  () => {
     const navigate  = useNavigate();
     const queryClient = useQueryClient();
-    const {auth, setAuth} = useApp();
+    const {setAuth} = useApp();
     
     const mutation = useMutation({
         mutationFn: ({email, password}: LoginCredentials) => loginUserApi({email, password}),
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
-            localStorage.setItem('userId', data.user.id.toString());
             setAuth(data.user);
             queryClient.invalidateQueries({queryKey: ["tags"]});
+            queryClient.invalidateQueries({queryKey: ['userTasks', 'me']});
+            queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']})
             setTimeout(() => {
                 navigate('/');
             }, 1000)

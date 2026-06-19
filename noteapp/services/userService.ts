@@ -1,41 +1,24 @@
-import { TypeOfUser } from "../types";
-import { api } from "./api"
+import { TypeOfNote, TypeOfUser } from "../types";
+import { apiClient } from "./apiClient"
 
 export interface LoginCredentials {
     email: string,
     password: string
 }
 
-export const totalTasksUserApi = async (id: string): Promise<TypeOfUser[]> => {
-    const res = await fetch(`${api}/users/${id}`, {
-        method: 'GET',
-    });
+export const totalFavoriteUserApi = async (): Promise<TypeOfNote[]> => {
+    return apiClient('/users/favorites');
+}
 
-    if(!res.ok) {
-        const error = await res.json();
-        throw new Error(error);
-    }
-
-    return res.json();
+export const totalTasksUserApi = async (): Promise<TypeOfUser> => {
+    return apiClient('/users/me');
 }
 
 export const loginUserApi = async ({email, password} : LoginCredentials): Promise<{user: TypeOfUser; token: string}> => {
-    const res = await fetch(`${api}/users/login`, {
+    return apiClient('/users/login', {
         method: 'POST',
-        headers:{
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify({
-            email, password
-        })
+        body: {email, password}
     })
-
-    if(!res.ok){
-        const error = await res.json();
-        throw new Error(error);
-    }
-
-    return res.json();
 }
 
 export interface RegisterCredentials {
@@ -47,20 +30,8 @@ export interface RegisterCredentials {
 }
 
 export const registerUserApi = async({name, email, password, phone, image}: RegisterCredentials): Promise<{success: string, data: RegisterCredentials}> => {
-    const res = await fetch(`${api}/users/register`, {
+    return apiClient('/users/register', {
         method: 'POST',
-        headers:{
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify({
-            name, email, password, phone, image
-        })
+        body: {name,  email, password, phone, image}
     })
-
-    if(!res.ok){
-        const error = await res.json();
-        throw new Error(error);
-    }
-
-    return res.json();
 }
