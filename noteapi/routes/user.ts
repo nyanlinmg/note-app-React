@@ -6,6 +6,21 @@ import { auth } from "../middleware/auth";
 
 export const router = express.Router();
 
+router.get('/users/removedTasks', auth ,async (req, res) => {
+  try{
+    const  {id} = res.locals.user;
+    const removedTasks = await prisma.note.findMany({
+      where: {
+        userId: id,
+        remove: true
+      }
+    });
+    return res.status(200).json(removedTasks);
+  }catch(error){
+    return res.status(500).json({msg: "something went wrong"});
+  }
+})
+
 router.get('/users/verify', auth, async (req, res) => {
   try {
     const { id } = res.locals.user;
