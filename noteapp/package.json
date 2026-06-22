@@ -22,6 +22,7 @@
     "@mui/styled-engine-sc": "^9.0.1",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-query": "^5.101.0",
+    "date-fns": "^4.4.0",
     "framer-motion": "^12.40.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

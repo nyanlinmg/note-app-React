@@ -48,7 +48,11 @@ router.get('/users/me', auth, async (req, res) => {
     const { id } = res.locals.user;
     const totalTasks = await prisma.user.findUnique({
       where: { id },
-      include: { notes: true }
+      include: { 
+          notes: {
+            include: {tag: true}
+          }
+       }
     });
     return res.status(200).json(totalTasks);
   } catch (error) {

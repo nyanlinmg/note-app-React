@@ -10,6 +10,10 @@ export const totalFavoriteUserApi = async (): Promise<TypeOfNote[]> => {
     return apiClient('/users/favorites');
 }
 
+export const totalRemovedTasksApi = async(): Promise<TypeOfNote[]> => {
+    return apiClient('/users/removedTasks');
+}
+
 export const totalTasksUserApi = async (): Promise<TypeOfUser> => {
     return apiClient('/users/me');
 }

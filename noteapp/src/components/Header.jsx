@@ -40,11 +40,11 @@ export default function Header() {
                     </IconButton>
 
                     <List sx={{display: {md: 'flex', xs: 'none' }, gap: 2}}>
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate('/')}>
                             <ListItemText>Home</ListItemText>
                         </ListItemButton>
 
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate('/profile')}>
                             <ListItemText>Profile </ListItemText>
                         </ListItemButton>
 
@@ -55,7 +55,7 @@ export default function Header() {
 
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                             {tags?.map(tag => (
-                                <MenuItem>
+                                <MenuItem key={tag.id}>
                                     {tag.name}
                                 </MenuItem>
                             ))}

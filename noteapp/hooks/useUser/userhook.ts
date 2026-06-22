@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router"
-import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalFavoriteUserApi, totalTasksUserApi } from "../../services/userService";
+import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalFavoriteUserApi, totalRemovedTasksApi, totalTasksUserApi } from "../../services/userService";
 import { useApp } from "../../src/AppProvider";
 
 export const useRegisterUser = () => {
@@ -21,6 +21,20 @@ export const useRegisterUser = () => {
     });
 
     return mutation;
+}
+
+export const useTotalRemovedTasksOfUser = () => {
+    const {
+        data: userRemovedTasks,
+        isFetching: isLoadingRemovedTasks,
+        error: removedTasksError,
+        refetch: refetchRemovedTasks
+    } = useQuery({
+        queryKey: ['userRemovedTasks', 'me'],
+        queryFn: () => totalRemovedTasksApi()
+    });
+
+    return {userRemovedTasks, removedTasksError, isLoadingRemovedTasks, refetchRemovedTasks}
 }
 
 export const useTotalTasksOfUser = () => {
@@ -64,6 +78,7 @@ export const useLoginUser =  () => {
             queryClient.invalidateQueries({queryKey: ["tags"]});
             queryClient.invalidateQueries({queryKey: ['userTasks', 'me']});
             queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']})
+            queryClient.invalidateQueries({queryKey: ['userRemovedTasks', 'me']})
             setTimeout(() => {
                 navigate('/');
             }, 1000)

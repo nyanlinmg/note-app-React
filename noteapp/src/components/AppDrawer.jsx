@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { getTags} from "../../hooks/useTags/tagshook";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 export default function AppDrawer() {
     const {mode, setMode, drawer, setDrawer, auth, setAuth} = useApp();
     const [dropDownOpen, setDropdownOpen] = useState(false);
@@ -89,6 +90,7 @@ export default function AppDrawer() {
         localStorage.removeItem('userId');
     }
 
+    const naviagte = useNavigate();
 
     return (
         <Drawer
@@ -115,14 +117,20 @@ export default function AppDrawer() {
 
                 <List>
                     <ListItem disablePadding>
-                        <ListItemButton sx={hoverStyle}>
+                        <ListItemButton sx={hoverStyle} onClick={() => {
+                            naviagte('/');
+                            setDrawer(false);
+                        }}>
                             <HomeIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
                             <ListItemText primary="Home"></ListItemText>
                         </ListItemButton>
                     </ListItem>
                     
                             <ListItem disablePadding>
-                                <ListItemButton sx={hoverStyle}>
+                                <ListItemButton sx={hoverStyle} onClick={() => {
+                                    naviagte('/profile')
+                                    setDrawer(false);
+                                }}>
                                     <AccountIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
                                     <ListItemText primary="Profile"></ListItemText>
                                 </ListItemButton>

@@ -8,7 +8,8 @@ import {
     Favorite as FavoriteIcon,
     AutoDelete as TrashBinIcon
 } from "@mui/icons-material";
-import { useTotalFavoritesOfUser, useTotalTasksOfUser } from "../../hooks/useUser/userhook";
+import { useTotalFavoritesOfUser, useTotalRemovedTasksOfUser, useTotalTasksOfUser } from "../../hooks/useUser/userhook";
+import AnimatedCounter from "./AnimatedCounter";
 
 const cardVariants = {
   hidden: { opacity: 0,y: 20 },
@@ -40,6 +41,8 @@ export default function Count() {
     const id = localStorage.getItem('userId');
     const {userTasks, isLoadingTasks, tasksError, refetchTasks} = useTotalTasksOfUser();
     const {userFavorites, isLoadingFavorites, favoritesError, refetchFavorites} = useTotalFavoritesOfUser();
+    const { userRemovedTasks, isLoadingRemovedTasks, removedTasksError, refetchRemovedTasks } = useTotalRemovedTasksOfUser();
+
     console.log(userTasks);
     console.log(userFavorites);
 
@@ -55,7 +58,11 @@ export default function Count() {
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <NotesIcon sx={{fontSize: 30}} />
                         <h1>Total Tasks :</h1>
-                        {isLoadingTasks ? <p className="text-sm">Loading...</p>: <h1 className="font-bold ms-1 text-2xl">{userTasks?.notes.length}</h1>}
+                        {isLoadingTasks ? (
+                            <p className="text-sm">Loading...</p>
+                        ) : (
+                            <AnimatedCounter value={userTasks?.notes.length ?? 0} className="font-bold ms-1 text-2xl" />
+                        )}
                     </div>
                 </MotionBox>
 
@@ -63,14 +70,23 @@ export default function Count() {
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <FavoriteIcon sx={{fontSize: 30}} />
                         <h1>Total Favorites : </h1>
-                        {isLoadingFavorites ? <p className="text-sm">Loading...</p>: <h1 className="font-bold ms-1 text-2xl">{userFavorites?.length}</h1>}
+                        {isLoadingFavorites ? (
+                            <p className="text-sm">Loading...</p>
+                        ) : (
+                            <AnimatedCounter value={userFavorites?.length ?? 0} className="font-bold ms-1 text-2xl" />
+                        )}
                     </div>
                 </MotionBox>
 
                 <MotionBox variants={cardVariants} component="div" className={`border-3 ${mode === "dark" ? "border-mauve-600 bg-mauve-900 text-rose-400" : "border-red-400 bg-red-50 text-red-500"} rounded-md w-full p-2`}>
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <TrashBinIcon sx={{fontSize: 30}} />
-                        <h1>Total Removed Tasks</h1>
+                        <h1>Removed Tasks : </h1>
+                        {isLoadingRemovedTasks ? (
+                            <p className="text-sm">Loading...</p>
+                        ) : (
+                            <AnimatedCounter value={userRemovedTasks?.length ?? 0} className="font-bold ms-1 text-2xl" />
+                        )}
                     </div>
                 </MotionBox>
         </MotionContainer>
