@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, IconButton, Typography } from "@mui/material";
 import { formatRelative, formatDistance} from "date-fns";
+import { useNavigate } from "react-router";
 
 import {
     Delete as DeleteIcon,
@@ -9,6 +10,8 @@ import {
 } from "@mui/icons-material"
 
 export default function Notes({note}) {
+
+    const navigate = useNavigate();
 
     return (
         <Box>
@@ -39,7 +42,7 @@ export default function Notes({note}) {
                 </CardContent>
 
                 <CardActions sx={{ml: 1, mb: 2}}>
-                    <Button size="md" variant="contained" title="view" sx={{textTransform: 'none', mr: 'auto'}}>View More</Button>
+                    <Button onClick={() => navigate(`/detail/${note?.id}`)} size="md" variant="contained" title="view" sx={{textTransform: 'none', mr: 'auto'}}>View More</Button>
                     <Button color="error" size="small" title="delete" variant="outlined">
                         <DeleteIcon />
                     </Button>

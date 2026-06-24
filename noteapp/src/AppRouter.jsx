@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import NoteDetail from "./pages/NoteDetail";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Profile />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: '/detail/:id',
+                element: (
+                    <ProtectedRoute>
+                        <NoteDetail />
                     </ProtectedRoute>
                 )
             }

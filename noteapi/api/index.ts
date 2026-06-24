@@ -14,6 +14,9 @@ app.use(tagRouter)
 import { router as userRouter} from "../routes/user";
 app.use(userRouter);
 
+import { router as noteRouter } from "../routes/note";
+app.use(noteRouter)
+
 app.listen(8800,() => {
     console.log("Api running at port 8800...")
 })
