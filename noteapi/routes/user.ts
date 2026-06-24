@@ -69,6 +69,35 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.put('/users/edit', auth ,async(req, res) => {
+  try{
+    const {id} = res.locals.user;
+    const {name, email, password, phone, image} = req.body;
+
+    if(password.length < 8) {
+      return res.status(400).json({msg: "password must be at least8 characters"});
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const edit_user = await prisma.user.update({
+      where: {id},
+      data: {
+        name, 
+        email, 
+        password: hashedPassword,
+        phone: phone || null,
+        image: image || null
+      }
+    })
+
+    return res.status(201).json(edit_user);
+
+  }catch(error) {
+    return res.status(500).json({msg: "something went wrong"});
+  }
+})
+
 router.post('/users/register', async (req, res) => {
   try {
     const { name, email, password, phone, image } = req.body;

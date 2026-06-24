@@ -23,5 +23,7 @@ export type TypeOfNote = {
     tagId: number,
     remove: boolean,
     favorite: boolean,
-    createdAt: string
+    createdAt: string,
+    user: TypeOfUser,
+    tag: TypeOfTags
 }

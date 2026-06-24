@@ -18,6 +18,13 @@ export const totalTasksUserApi = async (): Promise<TypeOfUser> => {
     return apiClient('/users/me');
 }
 
+export const editUserApi = async({name, email, password, phone, image}: RegisterCredentials) : Promise<TypeOfUser> => {
+    return apiClient('/users/edit', {
+        method: 'PUT',
+        body: {name, email, password, phone, image}
+    });
+}
+
 export const loginUserApi = async ({email, password} : LoginCredentials): Promise<{user: TypeOfUser; token: string}> => {
     return apiClient('/users/login', {
         method: 'POST',

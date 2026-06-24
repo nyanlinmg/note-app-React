@@ -1,12 +1,12 @@
 import { Box, Button, Card, CardActions, CardContent, IconButton, Typography } from "@mui/material";
-import { formatRelative, formatDistance} from "date-fns";
+import { formatRelative, formatDistance, parseISO, formatDistanceToNow} from "date-fns";
 import { useNavigate } from "react-router";
 
 import {
     Delete as DeleteIcon,
     Label as LabelIcon,
-    StarBorder as StarBorderIcon,
-    Star as StarIcon
+    PushPinOutlined as PinOutlinedIcon,
+    PushPin as PinIcon
 } from "@mui/icons-material"
 
 export default function Notes({note}) {
@@ -24,8 +24,8 @@ export default function Notes({note}) {
                         <IconButton color="warning" size="large" title="favorite">
                             {
                                 note?.favorite ?
-                                <StarIcon/>:
-                                <StarBorderIcon />
+                                <PinIcon/>:
+                                <PinOutlinedIcon />
                             }
                         </IconButton>
                     </Box>
@@ -34,7 +34,7 @@ export default function Notes({note}) {
                         {note?.tag?.name}
                     </Typography>
                     <Typography variant="p" sx={{fontSize: 14}}>
-                        {formatRelative(note?.createdAt, new Date())}
+                        {formatRelative(parseISO(note?.createdAt), new Date())}
                     </Typography>
                     <Typography variant="body2" component="div" sx={{color: 'text.secondary', mt: 2}}>
                         {note?.contents?.slice(0,100) + "..."}

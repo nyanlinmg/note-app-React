@@ -1,7 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router"
-import { LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalFavoriteUserApi, totalRemovedTasksApi, totalTasksUserApi } from "../../services/userService";
+import { editUserApi, LoginCredentials, loginUserApi, RegisterCredentials, registerUserApi, totalFavoriteUserApi, totalRemovedTasksApi, totalTasksUserApi } from "../../services/userService";
 import { useApp } from "../../src/AppProvider";
+
+export const useEditUser = () => {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const {setAuth} = useApp();
+
+    const mutation = useMutation({
+        mutationFn: ({name, email, password, phone, image}: RegisterCredentials) => editUserApi({name, email, password, phone, image}),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["tags"]});
+            queryClient.invalidateQueries({queryKey: ['userTasks', 'me']});
+            queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']})
+            queryClient.invalidateQueries({queryKey: ['userRemovedTasks', 'me']})
+            
+            localStorage.removeItem('token');
+            setAuth(null);
+
+            window.alert("please login again");
+            navigate('/login');
+        },
+        onError: (error: Error) => {
+            console.log(error.message);
+        }
+    });
+
+    return mutation;
+}
 
 export const useRegisterUser = () => {
     const navigate  = useNavigate();

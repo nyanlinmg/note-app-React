@@ -1,18 +1,83 @@
-import { Alert, Button, Container } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Container, FormControl, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Dialog, DialogTitle ,DialogContent, DialogActions } from "@mui/material";
 import { useApp } from "../AppProvider";
-import { useTotalTasksOfUser } from "../../hooks/useUser/userhook";
+import { useEditUser, useTotalTasksOfUser } from "../../hooks/useUser/userhook";
 import darkBgImage from "../assets/dark_bg.jpg";
 import lightBgImage from "../assets/light_bg.jpg";
 import Notes from "../components/Notes";
+import { useId, useState } from "react";
+
+import {
+    Visibility as VisibilityIcon,
+    VisibilityOff as VisibilityOffIcon,
+    AddPhotoAlternate as AddPhotoIcon
+} from "@mui/icons-material";
 
 export default function Profile() {
     const {mode, setMode, auth, setAuth} = useApp();
     const {userTasks, isLoadingTasks, tasksError, refetchTasks} = useTotalTasksOfUser();
+    const [open, setOpen] = useState(false);
+    const [editName, setEditName] = useState("");
+    const [editEmail, setEditEmail ] = useState("");
+    const [editPhone, setEditPhone] = useState("");
+    const [editPassword, setEditPassword] = useState("");
+    const outlinedPasswordId = useId();
+    const [showPassword, setShowPassword] = useState(false);
+    const [preview, setPreview] = useState(null);
+    const [editImage, setEditImage] = useState(null);
+    const {mutate, isPending, isError, error, isSuccess, data} = useEditUser();
+
+    const handleClickOpen = () => {
+        setEditName(userTasks?.name);
+        setEditEmail(userTasks?.email);
+        setEditPhone(userTasks?.phone);
+        setEditImage(userTasks?.image);
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setEditName("");
+        setEditEmail("");
+        setEditPhone("");
+        setEditPassword("");
+        setOpen(false);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        mutate({
+            name: editName,
+            email: editEmail,
+            password: editPassword,
+            phone: editPhone,
+            image: editImage
+        });
+    }
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    
+    const handleMouseDownPassword = (e) => {
+        e.preventDefault();
+    }
+    
+    const handleMouseUpPassword = (e) => {
+        e.preventDefault();
+    }
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setEditImage(reader.result);
+            setPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    }
 
     return (
         <div>
             <Container 
-            component="image" 
             style={{backgroundImage: `${mode === "light" ? `url(${lightBgImage})` : `url(${darkBgImage})`}`}} 
             maxWidth="lg" 
             className={`p-4 flex flex-col justify-center bg-cover bg-center items-center ${mode === "dark" ? " border-mist-700 border-2": " border-slate-600 border-2"} rounded-lg shadow-lg`}>
@@ -32,9 +97,125 @@ export default function Profile() {
                                 <b className={`text-sm ${mode === "light" ? "text-mist-700" : "text-sky-800"}`}>{auth?.email}</b>
                                 <b className={`text-sm ${mode === "light" ? "text-mist-700" : "text-sky-800"}`}>{auth?.phone}</b>
 
-                                <Button sx={{textTransform: 'none'}} variant="outlined">
+                                <Button sx={{textTransform: 'none'}} onClick={handleClickOpen} variant="outlined">
                                     Edit Profile
                                 </Button>
+                                <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+                                    <DialogTitle sx={{fontSize: 18}}>Edit Profile</DialogTitle>
+                                    <DialogContent>
+
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                id="image-upload"
+                                                style={{ display: 'none' }}
+                                                onChange={handleImageChange}
+                                            />
+                                            <label htmlFor="image-upload" style={{ cursor: 'pointer' }}>
+                                                {preview ? (
+                                                    <Box
+                                                        component="img"
+                                                        src={preview}
+                                                        alt="preview"
+                                                        sx={{
+                                                            width: 90,
+                                                            height: 90,
+                                                            borderRadius: '50%',
+                                                            objectFit: 'cover',
+                                                            border: '2px solid #1976d2'
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <Box sx={{
+                                                        width: 90,
+                                                        height: 90,
+                                                        borderRadius: '50%',
+                                                        border: '2px dashed #1976d2',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: '#1976d2'
+                                                    }}>
+                                                        <AddPhotoIcon />
+                                                        <Typography variant="caption">Photo</Typography>
+                                                    </Box>
+                                                )}
+                                            </label>
+                                        </Box>
+
+                                        <TextField 
+                                            fullWidth
+                                            id="outlined-basic"
+                                            type="text"
+                                            label="Name"
+                                            variant="outlined"
+                                            placeholder="enter your name"
+                                            sx={{mb: 2, mt:1}}
+                                            onChange={(e) => setEditName(e.target.value)}
+                                            value={editName}
+                                        />
+
+                                        <TextField 
+                                            fullWidth
+                                            id="outlined-basic"
+                                            type="text"
+                                            label="Email"
+                                            variant="outlined"
+                                            placeholder="enter your email"
+                                            sx={{mb: 2, mt:1}}
+                                            onChange={(e) => setEditEmail(e.target.value)}
+                                            value={editEmail}
+                                        />
+
+                                        <FormControl fullWidth variant="outlined">
+                                                <InputLabel htmlFor={`${outlinedPasswordId}-input`}>Password</InputLabel>
+                                                    <OutlinedInput
+                                                        required
+                                                        id={`${outlinedPasswordId}-input`}
+                                                        type={showPassword ? "text" : "password"}
+                                                         placeholder="enter your password"
+                                                        value={editPassword}
+                                                        onChange={(e) => setEditPassword(e.target.value)}
+                                                        sx={{mb: 2}}
+                                                        endAdornment={
+                                                            <InputAdornment position="end">
+                                                                 <IconButton
+                                                                    aria-label={
+                                                                        showPassword ? 'hide the password' : 'display the password'
+                                                                    }
+                                                                    onClick={handleClickShowPassword}
+                                                                    onMouseDown={handleMouseDownPassword}
+                                                                    onMouseUp={handleMouseUpPassword}
+                                                                    edge="end"
+                                                                >
+                                                                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        }
+                                                            label="Password"
+                                                    />
+                                        </FormControl>
+
+                                        <TextField 
+                                            fullWidth
+                                            id="outlined-basic"
+                                            type="text"
+                                            label="Phone"
+                                            variant="outlined"
+                                            placeholder="enter your phone"
+                                            sx={{mb: 2, mt:1}}
+                                            onChange={(e) => setEditPhone(e.target.value)}
+                                            value={editPhone}
+                                        />
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={handleClose}>Cancel</Button>
+                                        <Button onClick={handleSubmit}>Submit</Button>
+                                    </DialogActions>
+                                </Dialog>
+
                             </div> 
                         </> : <p>Loading...</p>
                     }
