@@ -1,5 +1,5 @@
 import { Button, Container, IconButton, Typography } from "@mui/material";
-import { useNote } from "../../hooks/useNotes/notehook";
+import { useDeleteNote, useNote } from "../../hooks/useNotes/notehook";
 import { formatRelative, formatDistance, parseISO} from "date-fns";
 
 import {
@@ -8,9 +8,20 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from "@mui/icons-material";
+import { useNavigate } from "react-router";
 
 export default function Detail({id}) {
     const {noteDetail, noteDetailError, refetchNoteDetail, isLoadingNoteDetail} = useNote(id);
+    const { mutate: deleteNote, isPending: isDeleting } = useDeleteNote();
+    const navigate = useNavigate();
+
+    const handleDelete = (id) => {
+        if(window.confirm("Do you really want to remove this note ?")) {
+            deleteNote(id, {
+                onSuccess: () => navigate('/profile')
+            });
+        }
+    };
 
     console.log(noteDetail);
 
@@ -63,7 +74,7 @@ export default function Detail({id}) {
             </section>
 
             <footer className="mb-5">
-                <Button variant="outlined" color="error">
+                <Button onClick={() => handleDelete(id)} disabled={isDeleting} variant="outlined" color="error">
                     <DeleteIcon sx={{mr: 1}} />
                     <p>Delete</p>
                 </Button>

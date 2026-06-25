@@ -50,6 +50,8 @@ router.get('/users/me', auth, async (req, res) => {
       where: { id },
       include: { 
           notes: {
+            where: {remove: false},
+            orderBy: {createdAt: 'desc'},
             include: {tag: true}
           }
        }

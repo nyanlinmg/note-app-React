@@ -11,6 +11,7 @@ import {
     VisibilityOff as VisibilityOffIcon,
     AddPhotoAlternate as AddPhotoIcon
 } from "@mui/icons-material";
+import { useDeleteNote } from "../../hooks/useNotes/notehook";
 
 export default function Profile() {
     const {mode, setMode, auth, setAuth} = useApp();

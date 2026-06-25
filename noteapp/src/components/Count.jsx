@@ -31,7 +31,7 @@ const containerVariants = {
       opacity: 1,
       transition: {
           delay: 0.6,
-          staggerChildren: 0.3
+          staggerChildren: 0.2
       }
     }
 }

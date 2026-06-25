@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 
-export default function AnimatedCounter({ value = 0, duration = 0.4, className = "" }) {
+export default function AnimatedCounter({ value = 0, duration = 0.6, className = "" }) {
     const count = useMotionValue(0);
     const rounded = useTransform(count, (latest) => Math.round(latest));
     const prevValue = useRef(0);

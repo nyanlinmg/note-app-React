@@ -8,10 +8,18 @@ import {
     PushPinOutlined as PinOutlinedIcon,
     PushPin as PinIcon
 } from "@mui/icons-material"
+import { useDeleteNote } from "../../hooks/useNotes/notehook";
 
 export default function Notes({note}) {
 
     const navigate = useNavigate();
+    const { mutate: deleteNote, isPending: isDeleting } = useDeleteNote();
+
+    const handleDelete = (id) => {
+        if(window.confirm("Do you really want to remove this note ?")) {
+            deleteNote(id);
+        }
+    };
 
     return (
         <Box>
@@ -43,7 +51,7 @@ export default function Notes({note}) {
 
                 <CardActions sx={{ml: 1, mb: 2}}>
                     <Button onClick={() => navigate(`/detail/${note?.id}`)} size="md" variant="contained" title="view" sx={{textTransform: 'none', mr: 'auto'}}>View More</Button>
-                    <Button color="error" size="small" title="delete" variant="outlined">
+                    <Button onClick={() => handleDelete(note.id)} disabled={isDeleting} color="error" size="small" title="delete" variant="outlined">
                         <DeleteIcon />
                     </Button>
                 </CardActions>
