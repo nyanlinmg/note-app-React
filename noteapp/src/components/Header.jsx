@@ -16,7 +16,7 @@ import {
 import { getTags} from "../../hooks/useTags/tagshook";
 import { forwardRef, useEffect, useState } from "react";
 import { color } from "framer-motion";
-import { useAddNote, useDeleteNote } from "../../hooks/useNotes/notehook";
+import { useAddNote, useRemoveNote } from "../../hooks/useNotes/notehook";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -107,7 +107,7 @@ export default function Header() {
                             <ListItemText>favorite</ListItemText>
                         </ListItemButton>
 
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate('/trash')}>
                             <ListItemText>Trash</ListItemText>
                         </ListItemButton>
                     </List>

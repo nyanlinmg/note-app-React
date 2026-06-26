@@ -11,7 +11,7 @@ import {
     VisibilityOff as VisibilityOffIcon,
     AddPhotoAlternate as AddPhotoIcon
 } from "@mui/icons-material";
-import { useDeleteNote } from "../../hooks/useNotes/notehook";
+import { useRemoveNote } from "../../hooks/useNotes/notehook";
 
 export default function Profile() {
     const {mode, setMode, auth, setAuth} = useApp();
@@ -223,8 +223,8 @@ export default function Profile() {
                 </div>
             </Container>
 
-            {userTasks?.notes?.length ? 
-                <Container maxWidth="lg" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 mb-10" component="div">
+            {userTasks?.notes?.length > 0 ? 
+                <Container maxWidth={false} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 mb-10" component="div">
                     {userTasks?.notes?.map(note => {
                         return <Notes key={note.id} note={note} />
                     })}

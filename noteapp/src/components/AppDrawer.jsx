@@ -168,7 +168,10 @@ export default function AppDrawer() {
                             <Divider />
 
                             <ListItem disablePadding>
-                                <ListItemButton sx={hoverStyle}>
+                                <ListItemButton sx={hoverStyle} onClick={() => {
+                                    naviagte('/trash');
+                                    setDrawer(false);
+                                }}>
                                     <TrashIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
                                     <ListItemText primary="Trash"></ListItemText>
                                 </ListItemButton>

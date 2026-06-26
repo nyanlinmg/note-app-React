@@ -25,15 +25,30 @@ router.delete('/remove_note/:id', async(req, res) => {
     try{
         const id = Number(req.params.id);
 
-        const delete_note = await prisma.note.update({
+        const remove_note = await prisma.note.update({
             where: {id},
             data: {
                 remove: true
             }
         });
 
-        return res.status(200).json(delete_note);
+        return res.status(200).json(remove_note);
     }catch(error){
+        return res.status(500).json({msg: "Something went wrong"});
+    }
+})
+
+router.delete('/delete_note/:id', async(req, res) => {
+    try{
+        const id = Number(req.params.id);
+
+        const delete_note = await prisma.note.delete({
+            where: {id}
+        });
+
+        return res.status(200).json(delete_note);
+
+    }catch(error) {
         return res.status(500).json({msg: "Something went wrong"});
     }
 })
@@ -63,7 +78,7 @@ router.post('/add_note', auth, async(req, res) => {
     }
 })
 
-router.get("/notes/:id", async (req, res) => {
+router.get("/note_detail/:id", async (req, res) => {
     try{
         const id = await parseInt(req.params.id);
 

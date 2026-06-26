@@ -2,7 +2,7 @@ import { TypeOfNote } from "../types";
 import { apiClient } from "./apiClient"
 
 export const getNoteApi = async (id: string) : Promise<TypeOfNote> => {
-    return apiClient(`/notes/${id}`);
+    return apiClient(`/note_detail/${id}`);
 }
 
 export interface AddNoteCredentials {
@@ -11,8 +11,14 @@ export interface AddNoteCredentials {
     tag: number
 }
 
-export const deleteNoteApi = async(id: string) : Promise<TypeOfNote>  => {
+export const removeNoteApi = async(id: string) : Promise<TypeOfNote>  => {
     return apiClient(`/remove_note/${id}`, {
+        method: 'DELETE'
+    });
+}
+
+export const deleteNoteApi = async(id: string) : Promise<TypeOfNote>  => {
+    return apiClient(`/delete_note/${id}`, {
         method: 'DELETE'
     });
 }

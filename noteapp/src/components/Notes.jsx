@@ -6,17 +6,25 @@ import {
     Delete as DeleteIcon,
     Label as LabelIcon,
     PushPinOutlined as PinOutlinedIcon,
-    PushPin as PinIcon
+    PushPin as PinIcon,
+    Restore as RestoreIcon
 } from "@mui/icons-material"
-import { useDeleteNote } from "../../hooks/useNotes/notehook";
+import { useDeleteNote, useRemoveNote } from "../../hooks/useNotes/notehook";
 
-export default function Notes({note}) {
+export default function Notes({note, deleteId = null}) {
 
     const navigate = useNavigate();
+    const { mutate: removeNote, isPending: isRemoving } = useRemoveNote();
     const { mutate: deleteNote, isPending: isDeleting } = useDeleteNote();
 
-    const handleDelete = (id) => {
+    const handleRemove = (id) => {
         if(window.confirm("Do you really want to remove this note ?")) {
+            removeNote(id);
+        }
+    };
+
+    const handleDelete = (id) => {
+        if(window.confirm("Do you really want to delete permanently this note ?")) {
             deleteNote(id);
         }
     };
@@ -50,10 +58,49 @@ export default function Notes({note}) {
                 </CardContent>
 
                 <CardActions sx={{ml: 1, mb: 2}}>
-                    <Button onClick={() => navigate(`/detail/${note?.id}`)} size="md" variant="contained" title="view" sx={{textTransform: 'none', mr: 'auto'}}>View More</Button>
-                    <Button onClick={() => handleDelete(note.id)} disabled={isDeleting} color="error" size="small" title="delete" variant="outlined">
-                        <DeleteIcon />
-                    </Button>
+                    {
+                        deleteId ? 
+                        (
+                            <>
+                                <Button 
+                                onClick={() => handleDelete(note.id)} disabled={isDeleting} 
+                                color="error" 
+                                size="small" 
+                                title="delete" variant="outlined">
+                                    <DeleteIcon />
+                                </Button>
+
+                                <Button 
+                                
+                                color="warning" 
+                                size="small" 
+                                title="restore" variant="outlined">
+                                    <RestoreIcon />
+                                </Button>
+                            </>
+                        ) :
+                        (
+                            <>
+                                <Button 
+                                    onClick={() => navigate(`/detail/${note?.id}`)} 
+                                    size="md" 
+                                    variant="contained" title="view" 
+                                    sx={{textTransform: 'none', mr: 'auto'}}
+                                >
+                                    View More
+                                </Button>
+                                
+                                <Button
+                                    onClick={() => handleRemove(note.id)} disabled={isRemoving} 
+                                    color="error" 
+                                    size="small" 
+                                    title="delete" variant="outlined"
+                                >
+                                    <DeleteIcon />
+                                </Button>
+                            </>
+                        )
+                    }
                 </CardActions>
             </Card>
         </Box>

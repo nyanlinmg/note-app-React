@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import NoteDetail from "./pages/NoteDetail";
+import Trash from "./pages/Trash";
 
 const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
                         <NoteDetail />
                     </ProtectedRoute>
                 )
+            },
+            {
+                path: '/trash',
+                element: <Trash />
             }
         ]
     }

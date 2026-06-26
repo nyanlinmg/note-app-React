@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { addNoteApi, AddNoteCredentials, deleteNoteApi, getNoteApi } from "../../services/noteService"
+import { addNoteApi, AddNoteCredentials, deleteNoteApi, getNoteApi, removeNoteApi } from "../../services/noteService"
 import { useNavigate } from "react-router";
 
 export const useNote = (id: string) => {
@@ -18,10 +18,28 @@ export const useNote = (id: string) => {
 
 export const useDeleteNote = () => {
     const queryClient = useQueryClient();
-    const navigate = useNavigate();
-
+    
     const mutation = useMutation({
         mutationFn: (id: string) => deleteNoteApi(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['notes']});
+            queryClient.invalidateQueries({queryKey: ['userTasks', 'me']});
+            queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']});
+            queryClient.invalidateQueries({queryKey: ['userRemovedTasks', 'me']});
+        },
+        onError: (error: Error) => {
+            console.log(error.message);
+        }
+    });
+
+    return mutation;
+}
+
+export const useRemoveNote = () => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (id: string) => removeNoteApi(id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['notes']});
             queryClient.invalidateQueries({queryKey: ['userTasks', 'me']});

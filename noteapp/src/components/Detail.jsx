@@ -1,5 +1,5 @@
 import { Button, Container, IconButton, Typography } from "@mui/material";
-import { useDeleteNote, useNote } from "../../hooks/useNotes/notehook";
+import { useRemoveNote, useNote } from "../../hooks/useNotes/notehook";
 import { formatRelative, formatDistance, parseISO} from "date-fns";
 
 import {
@@ -12,12 +12,12 @@ import { useNavigate } from "react-router";
 
 export default function Detail({id}) {
     const {noteDetail, noteDetailError, refetchNoteDetail, isLoadingNoteDetail} = useNote(id);
-    const { mutate: deleteNote, isPending: isDeleting } = useDeleteNote();
+    const { mutate: removeNote, isPending: isDeleting } = useRemoveNote();
     const navigate = useNavigate();
 
     const handleDelete = (id) => {
         if(window.confirm("Do you really want to remove this note ?")) {
-            deleteNote(id, {
+            removeNote(id, {
                 onSuccess: () => navigate('/profile')
             });
         }

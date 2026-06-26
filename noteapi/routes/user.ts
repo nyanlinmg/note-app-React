@@ -13,6 +13,9 @@ router.get('/users/removedTasks', auth ,async (req, res) => {
       where: {
         userId: id,
         remove: true
+      },
+      include: {
+        tag: true
       }
     });
     return res.status(200).json(removedTasks);
