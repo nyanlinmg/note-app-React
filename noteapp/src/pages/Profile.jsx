@@ -1,4 +1,4 @@
-import { Alert, Box, Button, ButtonGroup, Container, FormControl, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Dialog, DialogTitle ,DialogContent, DialogActions } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Container, FormControl, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Dialog, DialogTitle ,DialogContent, DialogActions, Pagination } from "@mui/material";
 import { useApp } from "../AppProvider";
 import { useEditUser, useTotalTasksOfUser } from "../../hooks/useUser/userhook";
 import darkBgImage from "../assets/dark_bg.jpg";
@@ -9,7 +9,8 @@ import { useId, useState } from "react";
 import {
     Visibility as VisibilityIcon,
     VisibilityOff as VisibilityOffIcon,
-    AddPhotoAlternate as AddPhotoIcon
+    AddPhotoAlternate as AddPhotoIcon,
+    ListAlt as ListAltIcon
 } from "@mui/icons-material";
 import { useRemoveNote } from "../../hooks/useNotes/notehook";
 
@@ -26,6 +27,14 @@ export default function Profile() {
     const [preview, setPreview] = useState(null);
     const [editImage, setEditImage] = useState(null);
     const {mutate, isPending, isError, error, isSuccess, data} = useEditUser();
+    const [page, setPage] = useState(1);
+    
+    const notesPerPage = 6;
+    const userNotes = userTasks?.notes;
+    const startIndex = (page - 1) * notesPerPage;
+    const endIndex = startIndex + notesPerPage;
+    const currentNotes = userNotes?.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(userNotes?.length / notesPerPage);
 
     const handleClickOpen = () => {
         setEditName(userTasks?.name);
@@ -223,16 +232,35 @@ export default function Profile() {
                 </div>
             </Container>
 
-            {userTasks?.notes?.length > 0 ? 
-                <Container maxWidth={false} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 mb-10" component="div">
-                    {userTasks?.notes?.map(note => {
-                        return <Notes key={note.id} note={note} />
-                    })}
-                </Container> : 
-                <Container maxWidth="lg" component="div" className="mt-5">
-                    <Alert severity="warning">No Notes yet...</Alert>
-                </Container>
-            }
+            <Container sx={{mt: 3}}>
+                <Typography sx={{ fontSize: 23, fontWeight: 'bold', borderBottom: '1px solid', pb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Box>
+                        All Notes
+                        <ListAltIcon color="warning" sx={{ ml: 1, fontSize: 28 }} />
+                    </Box>
+
+                    <Box>
+                        <Pagination
+                            page={page}
+                            count={totalPages}
+                            shape="rounded"
+                            variant="outlined"
+                            onChange={(e, value) => setPage(value)}
+                        />
+                    </Box>
+                </Typography>
+
+                {currentNotes?.length > 0 ? 
+                    <Container maxWidth={false} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 mb-10" component="div">
+                        {currentNotes?.map(note => {
+                            return <Notes key={note.id} note={note} />
+                        })}
+                    </Container> : 
+                    <Container maxWidth="lg" component="div" className="mt-5">
+                        <Alert severity="warning">No Notes yet...</Alert>
+                    </Container>
+                }
+            </Container>
         </div>
     )
 }

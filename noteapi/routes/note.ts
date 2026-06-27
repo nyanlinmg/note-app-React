@@ -21,6 +21,49 @@ router.get("/notes", async (req, res) => {
     }
 });
 
+router.put('/pin/:id', async (req, res) => {
+    try{
+        const id = Number(req.params.id);
+
+        const note = await prisma.note.findUnique({
+            where: {id}
+        });
+
+        if(!note) {
+            return res.status(404).json({msg: "Note not found"});
+        }
+
+        const pin_note = await prisma.note.update({
+            where: {id},
+            data: {
+                favorite: !note.favorite
+            }
+        })
+
+        return res.status(200).json(pin_note);
+
+    }catch(error) {
+        return res.status(500).json({msg: "Something went wrong"});
+    }
+});
+
+router.put('/restore_note/:id', async(req, res) => {
+    try{
+        const id = Number(req.params.id);
+
+        const restore_note = await prisma.note.update({
+            where: {id},
+            data: {
+                remove: false
+            }
+        });
+
+        return res.status(200).json(restore_note);
+    }catch(error) {
+        return res.status(500).json({msg: "Something went wrong"});
+    }
+})
+
 router.delete('/remove_note/:id', async(req, res) => {
     try{
         const id = Number(req.params.id);

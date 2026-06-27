@@ -57,7 +57,7 @@ export default function Count() {
                 <MotionBox variants={cardVariants} component="div" className={`border-3 ${mode === "dark" ? "border-mauve-600 bg-mauve-900 text-blue-200" : "border-blue-400 bg-blue-50 text-blue-600"} rounded-md w-full p-2`}>
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <NotesIcon sx={{fontSize: 30}} />
-                        <h1>Total Tasks :</h1>
+                        <h1>Total Notes :</h1>
                         {isLoadingTasks ? (
                             <p className="text-sm">Loading...</p>
                         ) : (
@@ -81,7 +81,7 @@ export default function Count() {
                 <MotionBox variants={cardVariants} component="div" className={`border-3 ${mode === "dark" ? "border-mauve-600 bg-mauve-900 text-rose-400" : "border-red-400 bg-red-50 text-red-500"} rounded-md w-full p-2`}>
                     <div className="flex gap-2 font-bold text-xl items-center">
                         <TrashBinIcon sx={{fontSize: 30}} />
-                        <h1>Removed Tasks : </h1>
+                        <h1>Removed Notes : </h1>
                         {isLoadingRemovedTasks ? (
                             <p className="text-sm">Loading...</p>
                         ) : (

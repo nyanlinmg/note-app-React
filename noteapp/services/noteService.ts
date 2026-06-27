@@ -17,6 +17,18 @@ export const removeNoteApi = async(id: string) : Promise<TypeOfNote>  => {
     });
 }
 
+export const pinNoteApi = async(id: string) : Promise<TypeOfNote> => {
+    return apiClient(`/pin/${id}`, {
+        method: 'PUT'
+    });
+}
+
+export const restoreNoteApi = async(id: string) : Promise<TypeOfNote> => {
+    return apiClient(`/restore_note/${id}`, {
+        method: 'PUT'
+    });
+}
+
 export const deleteNoteApi = async(id: string) : Promise<TypeOfNote>  => {
     return apiClient(`/delete_note/${id}`, {
         method: 'DELETE'

@@ -1,5 +1,5 @@
 import { Button, Container, IconButton, Typography } from "@mui/material";
-import { useRemoveNote, useNote } from "../../hooks/useNotes/notehook";
+import { useRemoveNote, useNote, usePinNote } from "../../hooks/useNotes/notehook";
 import { formatRelative, formatDistance, parseISO} from "date-fns";
 
 import {
@@ -14,6 +14,7 @@ export default function Detail({id}) {
     const {noteDetail, noteDetailError, refetchNoteDetail, isLoadingNoteDetail} = useNote(id);
     const { mutate: removeNote, isPending: isDeleting } = useRemoveNote();
     const navigate = useNavigate();
+    const { mutate: pinNote} = usePinNote();
 
     const handleDelete = (id) => {
         if(window.confirm("Do you really want to remove this note ?")) {
@@ -22,6 +23,10 @@ export default function Detail({id}) {
             });
         }
     };
+
+    const handlePin = (id) => {
+        pinNote(id);
+    }
 
     console.log(noteDetail);
 
@@ -45,7 +50,7 @@ export default function Detail({id}) {
                         <Typography component="h1" sx={{fontSize: 28, fontWeight: 'bold', fontFamily: 'fangsong'}}>
                             {noteDetail?.titles}
                         </Typography>
-                        <IconButton color="warning" size="small">
+                        <IconButton color="warning" size="small" onClick={() => handlePin(id)}>
                             {noteDetail?.favorite ? <PinIcon/> : <PinOutlinedIcon/>}
                         </IconButton>
                     </div>

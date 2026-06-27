@@ -9,19 +9,29 @@ import {
     PushPin as PinIcon,
     Restore as RestoreIcon
 } from "@mui/icons-material"
-import { useDeleteNote, useRemoveNote } from "../../hooks/useNotes/notehook";
+import { useDeleteNote, usePinNote, useRemoveNote, useRestoreNote } from "../../hooks/useNotes/notehook";
 
 export default function Notes({note, deleteId = null}) {
 
     const navigate = useNavigate();
     const { mutate: removeNote, isPending: isRemoving } = useRemoveNote();
     const { mutate: deleteNote, isPending: isDeleting } = useDeleteNote();
+    const { mutate: restoreNote, isPending: isRestoring } = useRestoreNote();
+    const { mutate: pinNote} = usePinNote();
 
     const handleRemove = (id) => {
         if(window.confirm("Do you really want to remove this note ?")) {
             removeNote(id);
         }
     };
+
+    const handleRestore = (id) => {
+        restoreNote(id);
+    }
+
+    const handlePin = (id) => {
+        pinNote(id);
+    }
 
     const handleDelete = (id) => {
         if(window.confirm("Do you really want to delete permanently this note ?")) {
@@ -37,7 +47,7 @@ export default function Notes({note, deleteId = null}) {
                         <Typography variant="h2" sx={{fontSize: 18, color: 'text.dark', fontWeight: 'bold'}}>
                             {note?.titles}
                         </Typography>
-                        <IconButton color="warning" size="large" title="favorite">
+                        <IconButton onClick={() => handlePin(note?.id)} color="warning" size="large" title="favorite">
                             {
                                 note?.favorite ?
                                 <PinIcon/>:
@@ -63,7 +73,8 @@ export default function Notes({note, deleteId = null}) {
                         (
                             <>
                                 <Button 
-                                onClick={() => handleDelete(note.id)} disabled={isDeleting} 
+                                onClick={() => handleDelete(note.id)} 
+                                disabled={isDeleting} 
                                 color="error" 
                                 size="small" 
                                 title="delete" variant="outlined">
@@ -71,7 +82,8 @@ export default function Notes({note, deleteId = null}) {
                                 </Button>
 
                                 <Button 
-                                
+                                onClick={() => handleRestore(note.id)}
+                                disabled={isRestoring}
                                 color="warning" 
                                 size="small" 
                                 title="restore" variant="outlined">
