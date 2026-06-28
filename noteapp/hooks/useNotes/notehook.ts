@@ -1,6 +1,20 @@
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { addNoteApi, AddNoteCredentials, deleteNoteApi, getNoteApi, pinNoteApi, removeNoteApi, restoreNoteApi } from "../../services/noteService"
+import { addNoteApi, AddNoteCredentials, deleteNoteApi, getNoteApi, getPinNotesApi, pinNoteApi, removeNoteApi, restoreNoteApi } from "../../services/noteService"
 import { useNavigate } from "react-router";
+
+export const useFavorite = () => {
+    const {
+        data: pinNotes,
+        isLoading: isLoadingPinNotes,
+        error: pinNotesError,
+        refetch: refetchPinNotes
+    } = useQuery({
+        queryKey: ['favorite', 'me'],
+        queryFn: () => getPinNotesApi()
+    });
+
+    return {pinNotes, isLoadingPinNotes, pinNotesError, refetchPinNotes}
+}
 
 export const useNote = (id: string) => {
     const {
@@ -21,6 +35,7 @@ export const handleSuccess = (queryClient: QueryClient) => {
     queryClient.invalidateQueries({queryKey: ['userTasks', 'me']});
     queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']});
     queryClient.invalidateQueries({queryKey: ['userRemovedTasks', 'me']});
+    queryClient.invalidateQueries({queryKey: ['favorite', 'me']});
 }
 
 export const usePinNote = () => {

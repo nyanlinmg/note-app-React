@@ -159,7 +159,10 @@ export default function AppDrawer() {
                             </Collapse>
 
                             <ListItem disablePadding>
-                                <ListItemButton sx={hoverStyle}>
+                                <ListItemButton sx={hoverStyle} onClick={() => {
+                                    naviagte('/favorite');
+                                    setDrawer(false);
+                                }}>
                                     <FavoriteIcon sx={{color: mode === "dark" ? 'white' : 'blue', marginRight: 1}} />
                                     <ListItemText primary="Favorite"></ListItemText>
                                 </ListItemButton>

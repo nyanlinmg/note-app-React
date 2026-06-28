@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import NoteDetail from "./pages/NoteDetail";
 import Trash from "./pages/Trash";
+import Favorite from "./pages/Favorite";
 
 const router = createBrowserRouter([
     {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
             {
                 path: '/trash',
                 element: <Trash />
+            },
+            {
+                path: '/favorite',
+                element: <Favorite />
             }
         ]
     }

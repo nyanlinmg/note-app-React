@@ -11,6 +11,10 @@ export interface AddNoteCredentials {
     tag: number
 }
 
+export const getPinNotesApi = async() : Promise<TypeOfNote[]> => {
+    return apiClient('/pin');
+}
+
 export const removeNoteApi = async(id: string) : Promise<TypeOfNote>  => {
     return apiClient(`/remove_note/${id}`, {
         method: 'DELETE'

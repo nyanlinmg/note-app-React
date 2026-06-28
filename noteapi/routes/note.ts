@@ -21,6 +21,27 @@ router.get("/notes", async (req, res) => {
     }
 });
 
+router.get('/pin', auth ,async (req, res) => {
+    try {
+        const {id} = res.locals.user;
+
+        const pin_notes = await prisma.note.findMany({
+            where: {
+                userId: id,
+                favorite: true
+            },
+            orderBy: {createdAt: 'desc'},
+            include: {
+                tag: true
+            }
+        });
+
+        return res.status(200).json(pin_notes);
+    }catch(error) {
+        return res.status(500).json({msg: "Something went wrong"});
+    }
+})
+
 router.put('/pin/:id', async (req, res) => {
     try{
         const id = Number(req.params.id);
