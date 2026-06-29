@@ -155,6 +155,8 @@ export default function Profile() {
                                             </label>
                                         </Box>
 
+                                        {isError && <Alert severity="warning" className="mb-3" variant="outlined">{error.message}</Alert>}
+
                                         <TextField 
                                             fullWidth
                                             id="outlined-basic"

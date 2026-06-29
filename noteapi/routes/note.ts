@@ -21,6 +21,31 @@ router.get("/notes", async (req, res) => {
     }
 });
 
+router.put('/edit_note/:id', async(req, res) => {
+    try{
+        const id = Number(req.params.id);
+        const {title, content, tag_id} = req.body;
+
+        if(!title || !content || !tag_id) {
+            return res.status(400).json({msg: "fill the requried input"});
+        }
+
+        const edit_note = await prisma.note.update({
+            where: {id},
+            data: {
+                titles: title,
+                contents: content,
+                tagId: tag_id
+            }
+        });
+
+        return res.status(200).json(edit_note);
+
+    }catch(error) {
+        return res.status(500).json({msg: "Something went wrong"});
+    }
+})
+
 router.get('/pin', auth ,async (req, res) => {
     try {
         const {id} = res.locals.user;

@@ -1,6 +1,6 @@
-import { Button, Container, IconButton, Typography } from "@mui/material";
-import { useRemoveNote, useNote, usePinNote } from "../../hooks/useNotes/notehook";
-import { formatRelative, formatDistance, parseISO} from "date-fns";
+import { Button, Container, IconButton, Typography, Dialog, DialogTitle, DialogActions, DialogContent, Box, TextField, TextareaAutosize, FormControl, InputLabel, Select, Menu, MenuItem, Alert} from "@mui/material";
+import { useRemoveNote, useNote, usePinNote, useEditNote } from "../../hooks/useNotes/notehook";
+import { formatRelative, formatDistance, parseISO } from "date-fns";
 
 import {
     PushPinOutlined as PinOutlinedIcon,
@@ -9,12 +9,26 @@ import {
     Delete as DeleteIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import { getTags } from "../../hooks/useTags/tagshook";
 
 export default function Detail({id}) {
     const {noteDetail, noteDetailError, refetchNoteDetail, isLoadingNoteDetail} = useNote(id);
     const { mutate: removeNote, isPending: isDeleting } = useRemoveNote();
+    const {mutate: editNote, isPending: isEditing, isError, error} = useEditNote();
     const navigate = useNavigate();
     const { mutate: pinNote} = usePinNote();
+    const [open, setOpen] = useState(false);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [tagId, setTagId] = useState("");
+    const {tags, isLoading, fetchTags} = getTags();
+
+    const handleEdit = (id) => {
+        editNote({id, title, content, tag: tagId}, {
+            onSuccess: setOpen(false)
+        })
+    }
 
     const handleDelete = (id) => {
         if(window.confirm("Do you really want to remove this note ?")) {
@@ -26,6 +40,20 @@ export default function Detail({id}) {
 
     const handlePin = (id) => {
         pinNote(id);
+    }
+
+    const handleClickOpen = () => {
+        setTagId(noteDetail?.tag?.id);
+        setTitle(noteDetail?.titles);
+        setContent(noteDetail?.contents);
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setTagId("");
+        setTitle("");
+        setContent("");
+        setOpen(false);
     }
 
     console.log(noteDetail);
@@ -56,9 +84,61 @@ export default function Detail({id}) {
                     </div>
 
                     <div>
-                        <Button sx={{textTransform: 'none'}} variant="outlined">
+                        <Button sx={{textTransform: 'none'}} variant="outlined" onClick={handleClickOpen}>
                             <EditIcon sx={{fontSize: 18, mr: 1}} /> Edit note
                         </Button>
+                        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+                                    <DialogTitle sx={{fontSize: 18}}>Edit Note</DialogTitle>
+                                    <DialogContent>
+
+                                        {isError && <Alert severity="warning" className="mb-3" variant="outlined">{error.message}</Alert>}
+
+                                        <TextField 
+                                            fullWidth
+                                            id="outlined-basic"
+                                            type="text"
+                                            label="Title"
+                                            variant="outlined"
+                                            placeholder="enter the title"
+                                            sx={{mb: 2, mt:1}}
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                        />
+
+                                        <TextareaAutosize
+                                            style={{width: "100%", border: '1px solid gray', borderRadius: 4, padding: 10, marginTop: 15, marginBottom: 12}}
+                                            id="outlined-basic"
+                                            type="text"
+                                            label="Content"
+                                            variant="outlined"
+                                            placeholder="enter the content"
+                                            sx={{mb: 2, mt:1}}
+                                            value={content}
+                                            onChange={(e) => setContent(e.target.value)}
+                                        />
+
+                                        <FormControl fullWidth>
+                                                 <InputLabel id="select_tag">Tag</InputLabel>
+                                                 <Select
+                                                     labelId="select_tag"
+                                                     id="select"
+                                                     value={tagId}
+                                                     label="Tag"
+                                                     onChange={(e)  => setTagId(e.target.value)}
+                                                 >
+                                                     {tags?.map(t => (
+                                                         <MenuItem key={t.id} value={t.id}>
+                                                             {t.name}
+                                                         </MenuItem>
+                                                     ))}
+                                                 </Select>
+                                        </FormControl>                                   
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={handleClose}>Cancel</Button>
+                                        <Button onClick={() => {handleEdit(id)}}>Submit</Button>
+                                    </DialogActions>
+                                </Dialog>
                     </div>
                 </div>
 

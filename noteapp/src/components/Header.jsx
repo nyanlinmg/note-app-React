@@ -103,7 +103,7 @@ export default function Header() {
                             ))}
                         </Menu>
 
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate('/favorite')}>
                             <ListItemText>favorite</ListItemText>
                         </ListItemButton>
 

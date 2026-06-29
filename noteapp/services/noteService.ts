@@ -5,7 +5,8 @@ export const getNoteApi = async (id: string) : Promise<TypeOfNote> => {
     return apiClient(`/note_detail/${id}`);
 }
 
-export interface AddNoteCredentials {
+export interface NoteCredentials {
+    id?: string,
     title: string,
     content: string,
     tag: number
@@ -13,6 +14,17 @@ export interface AddNoteCredentials {
 
 export const getPinNotesApi = async() : Promise<TypeOfNote[]> => {
     return apiClient('/pin');
+}
+
+export const editNoteApi = async({id, title, content, tag} : NoteCredentials) : Promise<TypeOfNote> => {
+    return apiClient(`/edit_note/${id}`, {
+        method: 'PUT',
+        body: {
+            title, 
+            content,
+            tag_id: tag
+        }
+    })
 }
 
 export const removeNoteApi = async(id: string) : Promise<TypeOfNote>  => {
@@ -39,7 +51,7 @@ export const deleteNoteApi = async(id: string) : Promise<TypeOfNote>  => {
     });
 }
 
-export const addNoteApi = async ({title, content, tag} : AddNoteCredentials ) : Promise<TypeOfNote> => {
+export const addNoteApi = async ({title, content, tag} : NoteCredentials ) : Promise<TypeOfNote> => {
     return apiClient('/add_note', {
         method: 'POST',
         body: {

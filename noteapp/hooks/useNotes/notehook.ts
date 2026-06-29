@@ -1,5 +1,5 @@
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { addNoteApi, AddNoteCredentials, deleteNoteApi, getNoteApi, getPinNotesApi, pinNoteApi, removeNoteApi, restoreNoteApi } from "../../services/noteService"
+import { addNoteApi, NoteCredentials, deleteNoteApi, getNoteApi, getPinNotesApi, pinNoteApi, removeNoteApi, restoreNoteApi, editNoteApi } from "../../services/noteService"
 import { useNavigate } from "react-router";
 
 export const useFavorite = () => {
@@ -36,6 +36,23 @@ export const handleSuccess = (queryClient: QueryClient) => {
     queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']});
     queryClient.invalidateQueries({queryKey: ['userRemovedTasks', 'me']});
     queryClient.invalidateQueries({queryKey: ['favorite', 'me']});
+}
+
+export const useEditNote = () => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: ({id, title, content, tag}: NoteCredentials) => editNoteApi({id, title, content, tag}),
+        onSuccess:(_data, {id}) => {
+            handleSuccess(queryClient);
+            queryClient.invalidateQueries({queryKey: ['note', id]})
+        },
+        onError: (error: Error) => {
+            console.log(error.message);
+        }
+    });
+
+    return mutation;
 }
 
 export const usePinNote = () => {
@@ -107,7 +124,7 @@ export const useAddNote = () => {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: ({title, content, tag} : AddNoteCredentials) => addNoteApi({title, content, tag}),
+        mutationFn: ({title, content, tag} : NoteCredentials) => addNoteApi({title, content, tag}),
         onSuccess: () => {
             handleSuccess(queryClient);
         },
