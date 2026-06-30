@@ -93,6 +93,21 @@ router.put('/pin/:id', async (req, res) => {
     }
 });
 
+router.get('/get_tag/:id', async(req, res) => {
+    try {
+        const id = Number(req.params.id);
+
+        const get_tag = await prisma.note.findMany({
+            where: {tagId: id},
+            orderBy: {createdAt: 'desc'}
+        });
+
+        return res.status(200).json(get_tag);
+    }catch(error) {
+        return res.status(500).json({msg: "Something went wrong"});
+    }
+})
+
 router.put('/restore_note/:id', async(req, res) => {
     try{
         const id = Number(req.params.id);

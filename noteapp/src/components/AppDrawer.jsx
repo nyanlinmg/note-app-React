@@ -10,7 +10,8 @@ import {
     Delete as TrashIcon,
     ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon,
-    Logout as LogoutIcon
+    Logout as LogoutIcon,
+    Add as AddIcon
 
 } from "@mui/icons-material"
 import { useState } from "react";
@@ -148,9 +149,21 @@ export default function AppDrawer() {
 
                             <Collapse in={dropDownOpen} timeout="auto" unmountOnExit>
                                 <List disablePadding>
+                                    <ListItem disablePadding>
+                                        <ListItemButton>
+                                            Add Tag
+                                            <AddIcon sx={{ml: 1}} />
+                                        </ListItemButton>
+                                    </ListItem>
+
+                                    <Divider />
+
                                     {tags?.map(tag => (
                                         <ListItem disablePadding sx={tagHover}>
-                                            <ListItemButton>
+                                            <ListItemButton onClick={() => {
+                                                naviagte(`tagPage/${tag?.id}`);
+                                                setDrawer(false);
+                                            }}>
                                                 {tag.name}
                                             </ListItemButton>
                                         </ListItem>

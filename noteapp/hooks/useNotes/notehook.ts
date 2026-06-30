@@ -1,5 +1,5 @@
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { addNoteApi, NoteCredentials, deleteNoteApi, getNoteApi, getPinNotesApi, pinNoteApi, removeNoteApi, restoreNoteApi, editNoteApi } from "../../services/noteService"
+import { addNoteApi, NoteCredentials, deleteNoteApi, getNoteApi, getPinNotesApi, pinNoteApi, removeNoteApi, restoreNoteApi, editNoteApi, getNoteTagApi } from "../../services/noteService"
 import { useNavigate } from "react-router";
 
 export const useFavorite = () => {
@@ -14,6 +14,20 @@ export const useFavorite = () => {
     });
 
     return {pinNotes, isLoadingPinNotes, pinNotesError, refetchPinNotes}
+}
+
+export const useNoteTag = (id: string) => {
+    const {
+        data: noteTags,
+        isLoading: isLoadingNoteTags,
+        error: noteTagError,
+        refetch: refetchNoteTags
+    } = useQuery({
+        queryKey: ['noteTag', `${id}`],
+        queryFn: () => getNoteTagApi(id)
+    });
+
+    return {noteTags, isLoadingNoteTags, noteTagError, refetchNoteTags}
 }
 
 export const useNote = (id: string) => {
