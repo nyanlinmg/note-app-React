@@ -13,7 +13,7 @@ export interface NoteCredentials {
 }
 
 export const getNoteTagApi = async(id: string) : Promise<TypeOfNote[]> => {
-    return apiClient(`get_tag/${id}`);
+    return apiClient(`/get_tag/${id}`);
 }
 
 export const getPinNotesApi = async() : Promise<TypeOfNote[]> => {

@@ -93,13 +93,18 @@ router.put('/pin/:id', async (req, res) => {
     }
 });
 
-router.get('/get_tag/:id', async(req, res) => {
+router.get('/get_tag/:id', auth,async(req, res) => {
     try {
         const id = Number(req.params.id);
+        const {id: user_id} = res.locals.user;
 
         const get_tag = await prisma.note.findMany({
-            where: {tagId: id},
-            orderBy: {createdAt: 'desc'}
+            where: {tagId: id, userId: user_id, remove: false},
+            orderBy: {createdAt: 'desc'},
+            include: {
+                tag: true,
+                user: true
+            }
         });
 
         return res.status(200).json(get_tag);

@@ -97,10 +97,14 @@ export default function Header() {
 
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                             {tags?.map(tag => (
-                                <MenuItem key={tag.id}>
-                                    {tag.name}
-                                </MenuItem>
-                            ))}
+                                <ListItem disablePadding>
+                                    <ListItemButton key={tag?.id} onClick={() => {
+                                        navigate(`tagPage/${tag?.id}`);
+                                    }}>
+                                        {tag?.name}
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}                         
                         </Menu>
 
                         <ListItemButton onClick={() => navigate('/favorite')}>
