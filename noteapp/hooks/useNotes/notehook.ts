@@ -50,6 +50,8 @@ export const handleSuccess = (queryClient: QueryClient) => {
     queryClient.invalidateQueries({queryKey: ['userFavorites', 'me']});
     queryClient.invalidateQueries({queryKey: ['userRemovedTasks', 'me']});
     queryClient.invalidateQueries({queryKey: ['favorite', 'me']});
+    queryClient.invalidateQueries({queryKey: ['tags']});
+    queryClient.invalidateQueries({queryKey: ['noteTag']});
 }
 
 export const useEditNote = () => {

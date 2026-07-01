@@ -47,13 +47,15 @@ export default function Notes({note, deleteId = null}) {
                         <Typography variant="h2" sx={{fontSize: 18, color: 'text.dark', fontWeight: 'bold'}}>
                             {note?.titles}
                         </Typography>
-                        <IconButton onClick={() => handlePin(note?.id)} color="warning" size="large" title="favorite">
-                            {
-                                note?.favorite ?
-                                <PinIcon/>:
-                                <PinOutlinedIcon />
-                            }
-                        </IconButton>
+                        {!deleteId && 
+                            <IconButton onClick={() => handlePin(note?.id)} color="warning" size="large" title="favorite">
+                                {
+                                    note?.favorite ?
+                                    <PinIcon/>:
+                                    <PinOutlinedIcon />
+                                }
+                            </IconButton>
+                        }
                     </Box>
                     <Typography color="success">
                         <LabelIcon sx={{mr: 1}} />

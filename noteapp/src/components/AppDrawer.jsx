@@ -1,5 +1,5 @@
 import { useApp } from "../AppProvider";
-import { Box, Container, Divider, Drawer, IconButton, ListItem, Typography, List, ListItemButton, ListItemText, Collapse } from "@mui/material";
+import { Box, Container, Divider, Drawer, IconButton, ListItem, Typography, List, ListItemButton, ListItemText, Collapse, Button, Alert } from "@mui/material";
 import {
     CloseRounded as CloseIcon,
     NoteAlt as NoteIcon,
@@ -11,7 +11,8 @@ import {
     ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon,
     Logout as LogoutIcon,
-    Add as AddIcon
+    Add as AddIcon,
+    Delete
 
 } from "@mui/icons-material"
 import { useState } from "react";
@@ -149,15 +150,6 @@ export default function AppDrawer() {
 
                             <Collapse in={dropDownOpen} timeout="auto" unmountOnExit>
                                 <List disablePadding>
-                                    <ListItem disablePadding>
-                                        <ListItemButton>
-                                            Add Tag
-                                            <AddIcon sx={{ml: 1}} />
-                                        </ListItemButton>
-                                    </ListItem>
-
-                                    <Divider />
-
                                     {tags?.map(tag => (
                                         <ListItem disablePadding sx={tagHover}>
                                             <ListItemButton onClick={() => {
